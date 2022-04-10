@@ -1,0 +1,31 @@
+main:
+  params: [args]
+  steps:
+  - eodYFinanceQuotesToGCS:
+      switch:
+        - condition: ${args.wk_nasdaq_eodYFinanceQuotesToGCS == true}
+          steps:
+            - wk_nasdaq_eodYFinanceQuotesToGCS:
+                call: http.post
+                args:
+                  url: https://<YOUR-REGION>-<YOUR-PROJECT-ID>.cloudfunctions.net/wk_nasdaq_eodYFinanceQuotesToGCS
+                  body: 
+                    data: ${args}
+                  auth:
+                    type: OIDC
+                result: output
+  - importGCSQuotesToBQ:
+      switch:
+        - condition: ${args.wk_nasdaq_importGCSQuotesToBQ == true}
+          steps:
+            - wk_nasdaq_importGCSQuotesToBQ:
+                call: http.post
+                args:
+                  url: https://<YOUR-REGION>-<YOUR-PROJECT-ID>.cloudfunctions.net/wk_nasdaq_importGCSQuotesToBQ
+                  body: 
+                    data: ${args}
+                  auth:
+                    type: OIDC
+                result: output
+  - writeResults:
+      return: Workflow execution completed
