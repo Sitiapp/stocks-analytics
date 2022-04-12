@@ -45,7 +45,7 @@ professional.
 5. Enable Error Reporting api
 
     $ gcloud services enable clouderrorreporting.googleapis.com
-6. [a Create a sink](https://cloud.google.com/logging/docs/export/configure_export_v2#creating_sink) to save Google Cloud Logging logs into Big Query.
+6. [Create a sink](https://cloud.google.com/logging/docs/export/configure_export_v2#creating_sink) to save Google Cloud Logging logs into Big Query.
 
 
 ## INSTALLATION - step 3 (required)
