@@ -98,8 +98,8 @@ Create a Google Datastudio report, select your quotes Big Query table as data so
 
 info@sitiapp.it
 www.sitiapp.it
-Donate to see more:
-<a href="https://patreon.com/sitiapp"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dendel%26type%3Dpatrons&style=for-the-badge" /> </a>
+Donate to see more:  
+<a href="https://patreon.com/sitiapp"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dendel%26type%3Dpatrons&style=for-the-badge" /> </a>  
 
 ### Documentation:
 
