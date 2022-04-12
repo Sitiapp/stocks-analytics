@@ -4,6 +4,7 @@
 const { BigQuery } = require('@google-cloud/bigquery');
 const yahooFinance = require('yahoo-finance2').default;
 var moment = require('moment-timezone');
+const { ErrorReporting } = require('@google-cloud/error-reporting');
 
 const projectId = process.env.projectId;
 const query = process.env.nasdaqQuery;
@@ -18,6 +19,8 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
     console.log('Starting wk_nasdaq_eodYFinanceQuotesToGCS');
     getBQCsvData()
   } else {
+    const errors = new ErrorReporting();
+    errors.report(`Error on wk_nasdaq_eodYFinanceQuotesToGCS, req.method: This is not a POST request`);
     return res.status(404).send({
       error: 'This is not a POST request'
     });
@@ -58,7 +61,7 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
           price.createdAt = moment().tz(timezone).format();
           quotes.push(price);
         } catch (e) {
-          console.log(` Error on symbol ${JSON.stringify(symbol)}: ${JSON.stringify(e)}`);
+          //console.log(` Error on symbol ${JSON.stringify(symbol)}: ${JSON.stringify(e)}`);
           return null; // Maybe log the error?
         }
       }),
@@ -73,9 +76,11 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
   async function uploadToGCS(quotes) {
     if (!quotes) {
       console.log('No quotes found');
+      const errors = new ErrorReporting();
+      errors.report(`Error on wk_nasdaq_eodYFinanceQuotesToGCS, uploadToGCS: No quotes found`);
       return res.status(404)
     }
-    console.log('Starting uploadToGCS function');
+    console.log(`Starting uploading a new json line with ${JSON.stringify(quotes.length)} lines`);
     //console.log('Prices to uploadToGCS are: ', quotes);
     const { Storage } = require('@google-cloud/storage');
     const stream = require('stream');
@@ -103,6 +108,8 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
 
     await streamFileUpload().catch((err) => {
       console.log('Error on streamFileUpload: ', JSON.stringify(err));
+      const errors = new ErrorReporting();
+      errors.report(`Error on wk_nasdaq_eodYFinanceQuotesToGCS, streamFileUpload: Error on streamFileUpload ${JSON.stringify(err)}`);
       res.status(400).send();
     });
   }

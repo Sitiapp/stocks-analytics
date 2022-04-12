@@ -2,6 +2,7 @@
 
 const { BigQuery } = require('@google-cloud/bigquery');
 const { Storage } = require('@google-cloud/storage');
+const { ErrorReporting } = require('@google-cloud/error-reporting');
 
 const projectId = process.env.projectId;
 const bucket = process.env.nasdaqGCSBucket;
@@ -15,6 +16,8 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
     if (req.method === 'POST') {
         saveToBQ()
     } else {
+        const errors = new ErrorReporting();
+        errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, req.method: This is not a POST request`);
         return res.status(404).send({
             error: 'This is not a POST request'
         });
@@ -34,6 +37,8 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
                     err
                 )}`
             )
+            const errors = new ErrorReporting();
+            errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: dataset.exists: dataset ${datasetName} does not exist: ${JSON.stringify(err)}`);
             return res.status(404)
         })
 
@@ -44,6 +49,8 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
                     err
                 )}`
             )
+            const errors = new ErrorReporting();
+            errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: table.exists: table ${tableName} does not exist: ${JSON.stringify(err)}`);
             return res.status(404)
         })
 
@@ -66,10 +73,14 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
             const errors = job.status.errors;
             if (errors && errors.length > 0) {
                 console.log('error on big query job: ', JSON.stringify(errors));
+                const errors = new ErrorReporting();
+                errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: error on big query job: ', ${JSON.stringify(errors)}`);
                 return res.status(404)
             }
         } catch (error) {
             console.log('error saveToBQ: ', JSON.stringify(error));
+            const errors = new ErrorReporting();
+            errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: error saveToBQ: ${JSON.stringify(error)}`);
             return res.status(404)
         }
     }
