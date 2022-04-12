@@ -96,18 +96,18 @@ Create a Google Datastudio report, select your quotes Big Query table as data so
 
 ### Contact Developer:
 
-info@sitiapp.it
-www.sitiapp.it
+info@sitiapp.it  
+www.sitiapp.it  
 Donate to see more:  
 <a href="https://patreon.com/sitiapp"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dendel%26type%3Dpatrons&style=for-the-badge" /> </a>  
 
 ### Documentation:
 
 #1 [Google Cloud Create a Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)
-#2 [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-gcloud)
-#3 [Google Cloud import CSV into Big Query](https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-csv#loading_csv_data_into_a_table)
-#4 [Google Cloud Environment variables](https://github.com/simonprickett/google-cloud-functions-environment-variables/blob/master/README.md)
-#5 [Google Cloud Regions zone](https://cloud.google.com/compute/docs/regions-zones)
-#6 [Google Cloud create a Workflow](https://cloud.google.com/workflows/docs/creating-updating-workflow#create_a_workflow)
-#7 [Google Cloud schedule a Workflow](https://cloud.google.com/workflows/docs/schedule-workflow#schedule_a_workflow)
-#8 [Google Cloud create Data Studio Report](https://cloud.google.com/bigquery/docs/visualize-data-studio#create_reports_and_charts_using_and_the_connector)
+#2 [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-gcloud)  
+#3 [Google Cloud import CSV into Big Query](https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-csv#loading_csv_data_into_a_table)  
+#4 [Google Cloud Environment variables](https://github.com/simonprickett/google-cloud-functions-environment-variables/blob/master/README.md)  
+#5 [Google Cloud Regions zone](https://cloud.google.com/compute/docs/regions-zones)  
+#6 [Google Cloud create a Workflow](https://cloud.google.com/workflows/docs/creating-updating-workflow#create_a_workflow)  
+#7 [Google Cloud schedule a Workflow](https://cloud.google.com/workflows/docs/schedule-workflow#schedule_a_workflow)  
+#8 [Google Cloud create Data Studio Report](https://cloud.google.com/bigquery/docs/visualize-data-studio#create_reports_and_charts_using_and_the_connector)  
