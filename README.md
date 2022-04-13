@@ -41,7 +41,7 @@ professional.
 4. Add roles to new created service account: (Link #2)
 
    $ gcloud projects add-iam-policy-binding `<YOUR-PROJECT-ID>` --member="serviceAccount:cloud-function-invoker@`<YOUR-PROJECT-ID>`.iam.gserviceaccount.com" --role="roles/bigquery.admin" --role="roles/cloudfunctions.invoker" --role="roles/storage.objectAdmin"
-   --role="roles/workflows.invoker"
+   --role="roles/workflows.invoker" --role="roles/errorreporting.admin"  
 5. Enable Error Reporting api
 
     $ gcloud services enable clouderrorreporting.googleapis.com
