@@ -16,11 +16,10 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
     if (req.method === 'POST') {
         saveToBQ()
     } else {
+        const error = `Error on wk_nasdaq_importGCSQuotesToBQ, req.method: This is not a POST request`
         const errors = new ErrorReporting();
-        errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, req.method: This is not a POST request`);
-        return res.status(404).send({
-            error: 'This is not a POST request'
-        });
+        errors.report();
+        return res.status(404).send(error);
     }
 
     async function saveToBQ() {
@@ -32,26 +31,16 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
         let dataset = bigquery.dataset(datasetName)
 
         dataset.exists().catch(err => {
-            console.error(
-                `dataset.exists: dataset ${datasetName} does not exist: ${JSON.stringify(
-                    err
-                )}`
-            )
-            const errors = new ErrorReporting();
-            errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: dataset.exists: dataset ${datasetName} does not exist: ${JSON.stringify(err)}`);
-            return res.status(404)
+            const error = `Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: dataset.exists: dataset ${datasetName} does not exist: ${JSON.stringify(err)}`
+            new ErrorReporting().report(error);
+            return res.status(404).send(error);
         })
 
         let table = dataset.table(tableName)
         table.exists().catch(err => {
-            console.error(
-                `table.exists: table ${tableName} does not exist: ${JSON.stringify(
-                    err
-                )}`
-            )
-            const errors = new ErrorReporting();
-            errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: table.exists: table ${tableName} does not exist: ${JSON.stringify(err)}`);
-            return res.status(404)
+            const error = `Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: table.exists: table ${tableName} does not exist: ${JSON.stringify(err)}`
+            new ErrorReporting().report(error);
+            return res.status(404).send(error);
         })
 
         const metadata = {
@@ -72,16 +61,15 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
 
             const errors = job.status.errors;
             if (errors && errors.length > 0) {
-                console.log('error on big query job: ', JSON.stringify(errors));
-                const errors = new ErrorReporting();
-                errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: error on big query job: ', ${JSON.stringify(errors)}`);
-                return res.status(404)
+                const error = `Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: error on big query job: ', ${JSON.stringify(errors)}`
+                new ErrorReporting().report(error);
+                return res.status(404).send(error);
+
             }
-        } catch (error) {
-            console.log('error saveToBQ: ', JSON.stringify(error));
-            const errors = new ErrorReporting();
-            errors.report(`Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: error saveToBQ: ${JSON.stringify(error)}`);
-            return res.status(404)
+        } catch (err) {
+            const error = `Error on wk_nasdaq_importGCSQuotesToBQ, saveToBQ: error saveToBQ: ${JSON.stringify(err)}`
+            new ErrorReporting().report(error);
+            return res.status(404).send(error);
         }
     }
 }
