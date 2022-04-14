@@ -1,4 +1,4 @@
-# Stock analytics - v0.0.1 alpha 🚀
+# Stock analytics - v0.0.9 alpha 🚀
 
 ## Info:
 

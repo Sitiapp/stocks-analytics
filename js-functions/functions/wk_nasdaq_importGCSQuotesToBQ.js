@@ -6,7 +6,7 @@ const { ErrorReporting } = require('@google-cloud/error-reporting');
 
 const projectId = process.env.projectId;
 const bucket = process.env.nasdaqGCSBucket;
-const fileName = process.env.nasdaqFileName;
+const fileName = process.env.nasdaqQuotesFileName;
 const datasetName = process.env.datasetName;
 const tableName = process.env.tableName;
 const location = process.env.location;
@@ -56,7 +56,7 @@ exports.wk_nasdaq_importGCSQuotesToBQ = async (req, res) => {
                 .dataset(datasetName)
                 .table(tableName)
                 .load(storage.bucket(bucket).file(fileName), metadata);
-            console.log(`Job ${job.id} completed.`);
+            console.log(`SUCCESS: Job ${job.id} completed.`);
             res.end()
 
             const errors = job.status.errors;

@@ -8,7 +8,7 @@ const { ErrorReporting } = require('@google-cloud/error-reporting');
 const projectId = process.env.projectId;
 const query = process.env.nasdaqQuery;
 const bucket = process.env.nasdaqGCSBucket;
-const fileName = process.env.nasdaqFileName;
+const fileName = process.env.nasdaqQuotesFileName;
 const timezone = process.env.timezone;
 const location = process.env.location;
 
@@ -54,16 +54,21 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
           var symbol = '' + row.Symbol;
           var price = await yahooFinance.quote(symbol);
           price.createdAt = moment().tz(timezone).format();
+          if (!price) {
+            const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, getQuotes rows.map: No quotes found for symbol: ${symbol}`
+            console.log(error)
+            new ErrorReporting().report(error);
+          }
           quotes.push(price);
         } catch (err) {
           const substring = "Error";
           const isError = string.includes(substring);
           if (!isError) {
+            //console.log('Error with some missmatching values returned from yahoo-finance2 on getQuotes rows.map')
             return null; // Maybe log the error?
           } else {
             const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, getQuotes rows.map: ${JSON.stringify(err)}`
             new ErrorReporting().report(error);
-            return null;
           }
         }
       }),
@@ -74,24 +79,24 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
       const substring = "Error";
       const isError = string.includes(substring);
       if (!isError) {
+        //console.log('Error with some missmatching value riturned from yahoo-finance2 on getQuotes Promise.all')
         return null; // Maybe log the error?
       } else {
         const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, getQuotes Promise.all: ${JSON.stringify(err)}`
         console.log(error);
         new ErrorReporting().report(error);
-        return null;
       }
     })
   }
 
   async function uploadToGCS(quotes) {
-    if (!quotes) {
+    if (!quotes || quotes.length == 0 || typeof quotes !== 'object') {
       const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, uploadToGCS: No quotes found`
       new ErrorReporting().report(error);
       return res.status(404).send(error);
     }
     console.log(`Starting uploading a new json line with ${JSON.stringify(quotes.length)} lines`);
-    //console.log('Prices to uploadToGCS are: ', quotes);
+
     const { Storage } = require('@google-cloud/storage');
     const stream = require('stream');
     const storage = new Storage(projectId);
@@ -100,9 +105,11 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
     const passthroughStream = new stream.PassThrough();
 
     // converting json object into json new line for big query
-    const ndJson = JSON.parse(JSON.stringify(quotes)).map((element) => {
-      return JSON.stringify(element)
-    }).join("\n");
+    const ndJson = JSON.parse(JSON.stringify(quotes))
+      .map((element) => {
+        return JSON.stringify(element)
+      })
+      .join("\n")
 
     // saving gcs json new line file into bq as a stream
     passthroughStream.write(ndJson);
@@ -111,21 +118,17 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
     async function streamFileUpload() {
       passthroughStream.pipe(file.createWriteStream())
         .on('finish', () => {
-          console.log('Uploaded a file!');
-        });
-      console.log(`File uploaded to bucketName`);
-      res.end()
+          console.log('File upload completed succesfully');
+        })
+      console.log('SUCCESS: wk_nasdaq_eodYFinanceQuotesToGCS completed');
+      res.end();
     }
 
-    await streamFileUpload().catch((err) => {
-      const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, streamFileUpload: ${JSON.stringify(err)}`
-      new ErrorReporting().report(error);
-      return res.status(404).send(error);
-    });
+    await streamFileUpload()
+      .catch((err) => {
+        const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, streamFileUpload: ${JSON.stringify(err)}`
+        new ErrorReporting().report(error);
+        return res.status(404).send(error);
+      });
   }
-};
-
-
-
-
-
+}
