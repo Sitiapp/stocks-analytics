@@ -53,7 +53,10 @@ exports.wk_nasdaq_eodYFinanceQuotesToGCS = async (req, res) => {
         try {
           var symbol = '' + row.Symbol;
           var price = await yahooFinance.quote(symbol);
-          price.createdAt = moment().tz(timezone).format();
+          const today = moment().tz(timezone).format()
+          price.createdAt = today ? today : null;
+          price.industry = row.Industry ? row.Industry : null;
+          price.sector = row.Sector ? row.Sector : null;
           if (!price) {
             const error = `Error on wk_nasdaq_eodYFinanceQuotesToGCS, getQuotes rows.map: No quotes found for symbol: ${symbol}`
             console.log(error)

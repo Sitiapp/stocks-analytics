@@ -1,4 +1,4 @@
-# Stock analytics - v0.0.9 alpha 🚀
+# Stock analytics - v0.0.10 alpha 🚀
 
 ## Info:
 
@@ -103,7 +103,7 @@ Donate to see more:
 
 ### Documentation:
 
-#1 [Google Cloud Create a Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)
+#1 [Google Cloud Create a Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)  
 #2 [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-gcloud)  
 #3 [Google Cloud import CSV into Big Query](https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-csv#loading_csv_data_into_a_table)  
 #4 [Google Cloud Environment variables](https://github.com/simonprickett/google-cloud-functions-environment-variables/blob/master/README.md)  
